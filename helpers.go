@@ -7,7 +7,11 @@ import (
 	"net/http"
 )
 
-type Config struct{}
+type Client struct{}
+
+func NewClient() (*Client, error) {
+	return &Client{}, nil
+}
 
 type jsonResponse struct {
 	Error   bool   `json:"error"`
@@ -15,7 +19,7 @@ type jsonResponse struct {
 	Data    any    `json:"data"`
 }
 
-func (app *Config) ReadJson(w http.ResponseWriter, r *http.Request, data any) error {
+func (app *Client) ReadJson(w http.ResponseWriter, r *http.Request, data any) error {
 	const maxBytes = 1024 * 1024 // 1MB
 
 	r.Body = http.MaxBytesReader(w, r.Body, int64(maxBytes))
@@ -32,7 +36,7 @@ func (app *Config) ReadJson(w http.ResponseWriter, r *http.Request, data any) er
 	return nil
 }
 
-func (app *Config) WriteJson(w http.ResponseWriter, status int, data any, headers ...http.Header) error {
+func (app *Client) WriteJson(w http.ResponseWriter, status int, data any, headers ...http.Header) error {
 	out, err := json.Marshal(data)
 	if err != nil {
 		return err
@@ -53,7 +57,7 @@ func (app *Config) WriteJson(w http.ResponseWriter, status int, data any, header
 	return nil
 }
 
-func (app *Config) ErrorJson(w http.ResponseWriter, err error, status ...int) error {
+func (app *Client) ErrorJson(w http.ResponseWriter, err error, status ...int) error {
 	statusCode := http.StatusBadRequest
 
 	if len(status) > 0 {
