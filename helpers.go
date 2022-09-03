@@ -15,7 +15,7 @@ type jsonResponse struct {
 	Data    any    `json:"data"`
 }
 
-func (app *Config) readJson(w http.ResponseWriter, r *http.Request, data any) error {
+func (app *Config) ReadJson(w http.ResponseWriter, r *http.Request, data any) error {
 	const maxBytes = 1024 * 1024 // 1MB
 
 	r.Body = http.MaxBytesReader(w, r.Body, int64(maxBytes))
@@ -32,7 +32,7 @@ func (app *Config) readJson(w http.ResponseWriter, r *http.Request, data any) er
 	return nil
 }
 
-func (app *Config) writeJson(w http.ResponseWriter, status int, data any, headers ...http.Header) error {
+func (app *Config) WriteJson(w http.ResponseWriter, status int, data any, headers ...http.Header) error {
 	out, err := json.Marshal(data)
 	if err != nil {
 		return err
@@ -53,7 +53,7 @@ func (app *Config) writeJson(w http.ResponseWriter, status int, data any, header
 	return nil
 }
 
-func (app *Config) errorJson(w http.ResponseWriter, err error, status ...int) error {
+func (app *Config) ErrorJson(w http.ResponseWriter, err error, status ...int) error {
 	statusCode := http.StatusBadRequest
 
 	if len(status) > 0 {
@@ -64,5 +64,5 @@ func (app *Config) errorJson(w http.ResponseWriter, err error, status ...int) er
 	jsonResponse.Error = true
 	jsonResponse.Message = err.Error()
 
-	return app.writeJson(w, statusCode, jsonResponse)
+	return app.WriteJson(w, statusCode, jsonResponse)
 }
