@@ -13,7 +13,7 @@ func NewClient() (*Client, error) {
 	return &Client{}, nil
 }
 
-type jsonResponse struct {
+type JsonResponse struct {
 	Error   bool   `json:"error"`
 	Message string `json:"message"`
 	Data    any    `json:"data"`
@@ -64,7 +64,7 @@ func (app *Client) ErrorJson(w http.ResponseWriter, err error, status ...int) er
 		statusCode = status[0]
 	}
 
-	var jsonResponse jsonResponse
+	var jsonResponse JsonResponse
 	jsonResponse.Error = true
 	jsonResponse.Message = err.Error()
 
